@@ -1,33 +1,41 @@
 <!DOCTYPE html>
 <html>
+
 <body>
-<h1>HTML Geolocation</h1>
-<p>Click the button to get your coordinates.</p>
+  <h1>HTML Geolocation</h1>
+  <p>Click the button to get your coordinates.</p>
 
-<button onclick="getLocation()">Try It</button>
+  <button onclick="getLocation()">Try It</button>
 
-<p id="demo"></p>
+  <p id="demo"></p>
 
-<script>
-const x = document.getElementById("demo");
+  <script>
+    const x = document.getElementById("demo");
 
-function getLocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(success, error);
-  } else { 
-    x.innerHTML = "Geolocation is not supported by this browser.";
-  }
-}
+    function getLocation() {
+      if (navigator.geolocation) {
+        const options = {
+          enableHighAccuracy: true,
+          timeout: 5000,
+          maximumAge: 0,
+        };
+        navigator.geolocation.getCurrentPosition(success, error, options);
+      } else {
+        x.innerHTML = "Geolocation is not supported by this browser.";
+      }
+    }
 
-function success(position) {
-  x.innerHTML = "Latitude: " + position.coords.latitude + 
-  "<br>Longitude: " + position.coords.longitude;
-}
+    function success(position) {
+      x.innerHTML = "Latitude: " + position.coords.latitude +
+        "<br>Longitude: " + position.coords.longitude;
+      console.log(position);
+    }
 
-function error() {
-  alert("Sorry, no position available.");
-}
-</script>
+    function error() {
+      alert("Sorry, no position available.");
+    }
+  </script>
 
 </body>
+
 </html>
