@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <h1>HTML Test</h1>
+
+    <iframe frameborder="no" border="0" scrolling="no"
+        src="webcompt://wxOpen?tag=wx-open-launch-app&amp;iframeId=WX_TAG_IFRAME_ID_0" width="0" height="0"
+        style="display: inherit; width: 0px; height: 0px; vertical-align: top;"></iframe>
+</body>
+
+</html>
