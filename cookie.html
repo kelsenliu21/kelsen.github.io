@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookie 读写示例</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 30px 0;
+        }
+        
+        button {
+            padding: 12px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        #writeBtn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        #writeBtn:hover {
+            background-color: #45a049;
+        }
+        
+        #readBtn {
+            background-color: #2196F3;
+            color: white;
+        }
+        
+        #readBtn:hover {
+            background-color: #0b7dda;
+        }
+        
+        #cookieDisplay {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            min-height: 100px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .info {
+            color: #666;
+            font-size: 14px;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cookie 读写操作</h1>
+        
+        <div class="button-group">
+            <button id="writeBtn" onclick="writeCookie()">写入 Cookie</button>
+            <button id="readBtn" onclick="readCookie()">读取 Cookie</button>
+        </div>
+        
+        <div id="cookieDisplay">
+            点击按钮进行操作...
+        </div>
+        
+        <div class="info">
+            <strong>说明：</strong>
+            <ul>
+                <li>点击"写入 Cookie"按钮会保存当前时间戳到cookie中</li>
+                <li>点击"读取 Cookie"按钮会显示所有已保存的cookie</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // 写入Cookie函数
+        function writeCookie() {
+            // 获取当前时间并格式化
+            const now = new Date();
+            const formattedTime = formatDateTime(now);
+            
+            // 设置cookie名称和值
+            const cookieName = 'timestamp_' + now.getTime();
+            const cookieValue = formattedTime;
+            
+            // 设置cookie过期时间（7天后）
+            const expires = new Date();
+            expires.setDate(expires.getDate() + 7);
+            
+            // 写入cookie
+            document.cookie = `${cookieName}=${encodeURIComponent(cookieValue)}; expires=${expires.toUTCString()}; path=/`;
+            
+            // 显示写入结果
+            const display = document.getElementById('cookieDisplay');
+            display.innerHTML = `<strong style="color: green;">✓ Cookie 写入成功！</strong>\n\n`;
+            display.innerHTML += `Cookie 名称: ${cookieName}\n`;
+            display.innerHTML += `Cookie 值: ${cookieValue}\n`;
+            display.innerHTML += `过期时间: ${expires.toLocaleString('zh-CN')}`;
+        }
+        
+        // 读取Cookie函数
+        function readCookie() {
+            const display = document.getElementById('cookieDisplay');
+            const cookies = document.cookie;
+            
+            if (!cookies || cookies.trim() === '') {
+                display.innerHTML = '<strong style="color: orange;">⚠ 当前没有任何 Cookie</strong>';
+                return;
+            }
+            
+            // 解析所有cookie
+            const cookieArray = cookies.split(';');
+            let output = '<strong style="color: blue;">📋 所有 Cookie 列表：</strong>\n\n';
+            
+            cookieArray.forEach((cookie, index) => {
+                const [name, value] = cookie.trim().split('=');
+                output += `${index + 1}. ${name} = ${decodeURIComponent(value || '')}\n`;
+            });
+            
+            output += `\n<strong>总计：${cookieArray.length} 个 Cookie</strong>`;
+            display.innerHTML = output;
+        }
+        
+        // 格式化日期时间函数
+        function formatDateTime(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
+            
+            return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        }
+        
+        // 页面加载时自动读取一次cookie
+        window.onload = function() {
+            readCookie();
+        };
+    </script>
+</body>
+</html>
